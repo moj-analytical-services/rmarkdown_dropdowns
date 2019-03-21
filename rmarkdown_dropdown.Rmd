@@ -45,7 +45,7 @@ plots_tibble = unemp_lux_data %>%
 purrr::map2(paste0(plots_tibble$division, ".png"), plots_tibble$plot, ggplot2::ggsave,path = "plots", dpi = 300)
 ```
 
-# Display the plots in R Markdown via drop down menu
+# Use bselectR to display plots with drop down
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 division_plots <- paste0(list.files("plots", full.names = TRUE))
@@ -57,3 +57,63 @@ names(division_plots) <- str_replace_all(division_plots,
 bsselect(division_plots, type = "img", selected = "Beaufort", 
          live_search = TRUE, show_tick = TRUE)
 ```
+
+# Use plotly to display plots with drop down
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, eval = FALSE}
+plotly::plot_ly(data = unemp_lux_data,x=~year, y= ~unemployed, color = ~division, mode = 'lines') %>%
+  layout(
+    updatemenus = list(
+      list(
+        yanchor = 'auto',
+        buttons = list(
+          
+          list(method = "restyle",
+               args = list("visible", list(T,T,T)),
+               label = 'All of them'),
+          
+          list(method = "restyle",
+               args = list("visible", list(T, F,F)),
+               label = 'Beaufort'),
+          
+          list(method = "restyle",
+               args = list("visible", list(F,T,F)),
+               label = 'Bech'),
+          
+          list(method = "restyle",
+               args = list("visible", list(F,F,T)),
+               label = 'Berdorf')
+        ))))
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(plotly)
+plot_ly(mtcars, x = rownames(mtcars), y = ~mpg, name='mpg', type='scatter', mode='markers') %>%
+  add_trace(y = ~hp, name = 'power', type='scatter', mode='markers') %>%
+  add_trace(y = ~qsec, name = 'qsec', type='scatter', mode='markers') %>%
+  layout(
+    updatemenus = list(
+       
+      list(
+        type = "buttons",
+        x = -0.1,
+        y = 0.7,
+        label = 'Category',
+        buttons = list(
+          list(method = "restyle",
+               args = list('visible', c(TRUE, FALSE, FALSE)),
+               label = "mpg"),
+          list(method = "restyle",
+               args = list('visible', c(FALSE, TRUE, FALSE)),
+               label = "hp"),
+          list(method = "restyle",
+               args = list('visible', c(FALSE, FALSE, TRUE)),
+               label = "qsec")
+        )
+      )
+    )
+  )
+```
+
