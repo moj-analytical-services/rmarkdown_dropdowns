@@ -4,11 +4,7 @@ subtitle: How to create a drop down menu that users can pick charts from
 date: "`r format(Sys.time(), '%d %B %Y (%H:%M:%S)')`"
 output:
   html_document:
-    theme: cerulean
-    toc: true
-    toc_float: true
-    code_folding: hide
-    number_sections: true
+    self_contained: true
 ---
 
 ```{r setup, include=FALSE}
